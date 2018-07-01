@@ -1,5 +1,7 @@
 
 var projectionFore;
+var projectionBack;
+var projectionDistant;
 var player;
 var x=0;
 var y=0;
@@ -7,18 +9,21 @@ function setup(){
   createCanvas(400, 400);
   projectionFore = new Projection(50,1);
   projectionBack = new Projection(200,0.2);
+  projectionDistant = new Projection(20, 0.5);
   player = new Player(projectionFore);
 }
 
 
 function draw(){
-  background(1);
+  background(20);
   checkInput();
   // console.log("X:",x," Y:",y);
   projectionFore.render();
   player.render();
   projectionBack.render();
+  projectionDistant.render();
   connectingLines(projectionFore, projectionBack);
+  connectingLines(projectionFore, projectionDistant);
 
   blockOutside(projectionBack);
   fill(255);

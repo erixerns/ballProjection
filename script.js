@@ -5,19 +5,25 @@ var x=0;
 var y=0;
 function setup(){
   createCanvas(400, 400);
-  projectionFore = new Projection(50,2);
-  projectionBack = new Projection(200,5);
+  projectionFore = new Projection(50,1);
+  projectionBack = new Projection(200,0.2);
   player = new Player(projectionFore);
 }
 
 
 function draw(){
   background(1);
+  checkInput();
   // console.log("X:",x," Y:",y);
   projectionFore.render();
-  projectionBack.render();
   player.render();
+  projectionBack.render();
   connectingLines(projectionFore, projectionBack);
+
+  blockOutside(projectionBack);
+  fill(255);
+  text("X: "+x, 300, 340, 400, 400);
+  text("Y: "+y, 300, 350, 400, 400);
 }
 
 
@@ -36,6 +42,46 @@ function connectingLines(rect1, rect2){
   line(rect1.br[0], rect1.br[1], rect2.br[0], rect2.br[1]);
   // bottom left
   line(rect1.bl[0], rect1.bl[1], rect2.bl[0], rect2.bl[1]);
+  pop();
+}
+
+function blockOutside(biggerRect){
+  push();
+  translate(200, 200);
+  fill(255);
+  // block top
+  beginShape();
+  vertex(-200,-200);
+  vertex(200,-200);
+  vertex(biggerRect.tr[0], biggerRect.tr[1]);
+  vertex(biggerRect.tl[0], biggerRect.tl[1]);
+  endShape();
+
+  // block Right
+  beginShape();
+  vertex(-200,-200);
+  vertex(-200,200);
+  vertex(biggerRect.bl[0], biggerRect.bl[1]);
+  vertex(biggerRect.tl[0], biggerRect.tl[1]);
+  endShape();
+
+  fill(0);
+  // block Bottom
+  beginShape();
+  vertex(-200,200);
+  vertex(200,200);
+  vertex(biggerRect.br[0], biggerRect.br[1]);
+  vertex(biggerRect.bl[0], biggerRect.bl[1]);
+  endShape();
+
+  // block right
+  beginShape();
+  vertex(200,200);
+  vertex(200,-200);
+  vertex(biggerRect.tr[0], biggerRect.tr[1]);
+  vertex(biggerRect.br[0], biggerRect.br[1]);
+  endShape();
+
   pop();
 }
 
@@ -58,14 +104,14 @@ var Player = function(container){
     if(!((Math.abs(this.x)+this.container.width/2>(150+this.container.width/10)) && (Math.abs(this.x+x))>(150+this.container.width/10))){
       if(Math.abs(x)>200)
         x=0;
-      this.x+=(x/this.container.width)*this.container.speedFactor*0.8;
+      this.x+=(x/this.container.width)*this.container.speedFactor*1.2+(this.container.x-this.x)*0.05;
     }
 
     // For mouse Y
     if(!((Math.abs(this.y)+this.container.width/2>(150+this.container.width/10))  && (Math.abs(this.y+y))>(150+this.container.width/10))){
       if(Math.abs(y)>200)
         y=0;
-      this.y+=(y/this.container.width)*this.container.speedFactor*0.8;
+      this.y+=(y/this.container.width)*this.container.speedFactor*1.2+(this.container.y-this.y)*0.05;
     }
   };
 };
@@ -114,7 +160,6 @@ var Projection = function(width, speedFactor){
     if(!((Math.abs(this.x)+this.width/2>(150+this.width/10)) && (Math.abs(this.x+x))>(150+this.width/10))){
       if(Math.abs(x)>200)
         x=0;
-      text(x, 300, 300, 400, 400);
       // this.x+=transformedMouseX/this.width*this.speedFactor;
       this.x+=(x/this.width)*this.speedFactor;
     }
@@ -124,7 +169,6 @@ var Projection = function(width, speedFactor){
     if(!((Math.abs(this.y)+this.width/2>(150+this.width/10))  && (Math.abs(this.y+y))>(150+this.width/10))){
       if(Math.abs(y)>200)
         y=0;
-      text(y, 300, 350, 400, 400);
       // this.y+=transformedMouseY/this.width*this.speedFactor;
       this.y+=(y/this.width)*this.speedFactor;
     }
@@ -133,15 +177,32 @@ var Projection = function(width, speedFactor){
 };
 
 
-function keyPressed(){
-  if(key==='w' || key==='W')
-    y+=20;
-  else if(key==='s' || key==='S')
-    y-=20;
-  else if(key==='a' || key==='A')
-    x+=20;
-  else if(key==='d' || key==='D')
-    x-=20;
+function checkInput(){
+  if(keyIsDown(RIGHT_ARROW))
+    x+=2;
+  else if(keyIsDown(LEFT_ARROW))
+    x-=2;
+  else if(keyIsDown(UP_ARROW))
+    y-=1;
+  else if(keyIsDown(DOWN_ARROW))
+    y+=1;
+  else if(keyIsDown(ESCAPE)){
+    x=0;
+    y=0;
+  }
   else
     return;
 }
+
+// function keyPressed(){
+//   if(key==='w' || key==='W')
+//     y-=20;
+//   else if(key==='s' || key==='S')
+//     y+=20;
+//   else if(key==='a' || key==='A')
+//     x-=20;
+//   else if(key==='d' || key==='D')
+//     x+=20;
+//   else
+//     return;
+// }

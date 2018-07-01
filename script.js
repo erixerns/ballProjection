@@ -104,14 +104,14 @@ var Player = function(container){
     if(!((Math.abs(this.x)+this.container.width/2>(150+this.container.width/10)) && (Math.abs(this.x+x))>(150+this.container.width/10))){
       if(Math.abs(x)>200)
         x=0;
-      this.x+=(x/this.container.width)*this.container.speedFactor*1.2+(this.container.x-this.x)*0.05;
+      this.x+=(x/this.container.width)*this.container.speedFactor*Math.min(Math.abs(this.container.tr[0]-this.x),Math.abs(this.container.tl[0]-this.x))*0.1+(this.container.x-this.x)*0.05;
     }
 
     // For mouse Y
     if(!((Math.abs(this.y)+this.container.width/2>(150+this.container.width/10))  && (Math.abs(this.y+y))>(150+this.container.width/10))){
       if(Math.abs(y)>200)
         y=0;
-      this.y+=(y/this.container.width)*this.container.speedFactor*1.2+(this.container.y-this.y)*0.05;
+      this.y+=(y/this.container.width)*this.container.speedFactor*Math.min(Math.abs(this.container.tr[1]-this.y),Math.abs(this.container.br[1]-this.y))*0.1+(this.container.y-this.y)*0.05;
     }
   };
 };
@@ -178,20 +178,30 @@ var Projection = function(width, speedFactor){
 
 
 function checkInput(){
-  if(keyIsDown(RIGHT_ARROW))
+  if(keyIsDown(RIGHT_ARROW)){
     x+=2;
-  else if(keyIsDown(LEFT_ARROW))
-    x-=2;
-  else if(keyIsDown(UP_ARROW))
-    y-=1;
-  else if(keyIsDown(DOWN_ARROW))
-    y+=1;
-  else if(keyIsDown(ESCAPE)){
-    x=0;
-    y=0;
+    if(keyIsDown(UP_ARROW))
+      y-=1;
+    else if(keyIsDown(DOWN_ARROW))
+      y+=1;
+    else 
+     y=0;
   }
-  else
-    return;
+  else if(keyIsDown(LEFT_ARROW)){
+    x-=2;
+    if(keyIsDown(UP_ARROW))
+      y-=1;
+    else if(keyIsDown(DOWN_ARROW))
+      y+=1;
+    else 
+      y=0;
+  }
+  else{
+    x=0;
+  }
+
+  
+
 }
 
 // function keyPressed(){

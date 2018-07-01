@@ -25,7 +25,7 @@ function draw(){
   connectingLines(projectionFore, projectionBack);
   connectingLines(projectionFore, projectionDistant);
 
-  //blockOutside(projectionBack);
+  blockOutside(projectionBack);
   fill(255);
   text("X: "+x, 300, 340, 400, 400);
   text("Y: "+y, 300, 350, 400, 400);

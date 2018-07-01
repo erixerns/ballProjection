@@ -8,7 +8,7 @@ var y=0;
 function setup(){
   createCanvas(400, 400);
   projectionFore = new Projection(50,1);
-  projectionBack = new Projection(200,0.2);
+  projectionBack = new Projection(200,0);
   projectionDistant = new Projection(20, 0.5);
   player = new Player(projectionFore);
 }
@@ -25,7 +25,7 @@ function draw(){
   connectingLines(projectionFore, projectionBack);
   connectingLines(projectionFore, projectionDistant);
 
-  blockOutside(projectionBack);
+  //blockOutside(projectionBack);
   fill(255);
   text("X: "+x, 300, 340, 400, 400);
   text("Y: "+y, 300, 350, 400, 400);
@@ -50,6 +50,9 @@ function connectingLines(rect1, rect2){
   pop();
 }
 
+// ========================================
+// Function to Block the lines overflowing
+// ========================================
 function blockOutside(biggerRect){
   push();
   translate(200, 200);
@@ -183,57 +186,55 @@ var Projection = function(width, speedFactor){
 
 
 function checkInput(){
-  if(keyIsDown(RIGHT_ARROW)){
-    x+=2;
-    if(keyIsDown(UP_ARROW))
-      y-=1;
-    else if(keyIsDown(DOWN_ARROW))
-      y+=1;
-    else 
-     y=0;
-  }
-  else if(keyIsDown(LEFT_ARROW)){
-    x-=2;
-    if(keyIsDown(UP_ARROW))
-      y-=1;
-    else if(keyIsDown(DOWN_ARROW))
-      y+=1;
-    else 
-      y=0;
-  }
-  else if(keyIsDown(UP_ARROW)){
-    y-=2;
-    if(keyIsDown(LEFT_ARROW))
-      x-=1;
-    else if(keyIsDown(RIGHT_ARROW))
-      x+=1;
-    else
-      x=0;
-  }
-  else if(keyIsDown(DOWN_ARROW)){
-    y+=2;
-    if(keyIsDown(LEFT_ARROW))
-      x-=1;
-    else if(keyIsDown(RIGHT_ARROW))
-      x+=1;
-    else
-      x=0;
-  }
-  else{
+  if(
+    (projectionDistant.tl[0]<=projectionBack.tl[0] && keyIsDown(LEFT_ARROW)) ||
+    (projectionDistant.tr[0]>=projectionBack.tr[0] && keyIsDown(RIGHT_ARROW)) ||
+    (projectionDistant.tr[1]<=projectionBack.tr[1] && keyIsDown(UP_ARROW)) ||
+    (projectionDistant.br[1]>=projectionBack.br[1] && keyIsDown(DOWN_ARROW))
+  ){
     x=0;
     y=0;
+    return;    
+  }else{
+    if(keyIsDown(RIGHT_ARROW)){
+      x+=2;
+      if(keyIsDown(UP_ARROW))
+        y-=1;
+      else if(keyIsDown(DOWN_ARROW))
+        y+=1;
+      else 
+      y=0;
+    }
+    else if(keyIsDown(LEFT_ARROW)){
+      x-=2;
+      if(keyIsDown(UP_ARROW))
+        y-=1;
+      else if(keyIsDown(DOWN_ARROW))
+        y+=1;
+      else 
+        y=0;
+    }
+    else if(keyIsDown(UP_ARROW)){
+      y-=2;
+      if(keyIsDown(LEFT_ARROW))
+        x-=1;
+      else if(keyIsDown(RIGHT_ARROW))
+        x+=1;
+      else
+        x=0;
+    }
+    else if(keyIsDown(DOWN_ARROW)){
+      y+=2;
+      if(keyIsDown(LEFT_ARROW))
+        x-=1;
+      else if(keyIsDown(RIGHT_ARROW))
+        x+=1;
+      else
+        x=0;
+    }
+    else{
+      x=0;
+      y=0;
+    }
   }
 }
-
-// function keyPressed(){
-//   if(key==='w' || key==='W')
-//     y-=20;
-//   else if(key==='s' || key==='S')
-//     y+=20;
-//   else if(key==='a' || key==='A')
-//     x-=20;
-//   else if(key==='d' || key==='D')
-//     x+=20;
-//   else
-//     return;
-// }

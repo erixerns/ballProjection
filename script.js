@@ -196,12 +196,28 @@ function checkInput(){
     else 
       y=0;
   }
+  else if(keyIsDown(UP_ARROW)){
+    y-=2;
+    if(keyIsDown(LEFT_ARROW))
+      x-=1;
+    else if(keyIsDown(RIGHT_ARROW))
+      x+=1;
+    else
+      x=0;
+  }
+  else if(keyIsDown(DOWN_ARROW)){
+    y+=2;
+    if(keyIsDown(LEFT_ARROW))
+      x-=1;
+    else if(keyIsDown(RIGHT_ARROW))
+      x+=1;
+    else
+      x=0;
+  }
   else{
     x=0;
+    y=0;
   }
-
-  
-
 }
 
 // function keyPressed(){
